@@ -20,16 +20,33 @@ channel += 1
 
 def poppups():
     while True:
-        time.sleep(random.randint(20, 30))
-        match random.randint(0, 1):
+        time.sleep(random.randint(10, 25))
+        match random.randint(0, 2):
             case 0:
                 pringles()
             case 1:
                 error()
+            case 2:
+                surfurs()
 
 
 def pringles():
-    messagebox.showinfo("Important!!!!", "Hot pringles in your area!!")
+    root = tkinter.Tk()
+    root.wm_title("HOT PRINGLES IN YOUR AREA!!!")
+    root.focus_force()
+    image = tkinter.PhotoImage(file=r"Hot Pringles.png", width=973, height=584).subsample(3)
+    label = tkinter.Label(root, text="HOT PRINGLES IN YOUR AREA!!!", image=image, compound="bottom")
+    label.pack()
+    root.mainloop()
+
+def surfurs():
+    root = tkinter.Tk()
+    root.wm_title("JOIN THE SURFURS")
+    root.focus_force()
+    image = tkinter.PhotoImage(file=r"Bad SUFURS Logo.png", width=973, height=584).subsample(3)
+    label = tkinter.Label(root, text="JOIN THE SURFURS", image=image, compound="bottom")
+    label.pack()
+    root.mainloop()
 
 def error():
     messagebox.showerror("Error", "Missing admin permissions cannot delete system32\nplease run this program as administrator")
@@ -104,6 +121,9 @@ class Step:
     def run(self, window_surface: pygame.Surface, delta: float) -> bool:
         return False
 
+    def buzzer(self):
+        mixer.Channel(7).play(pygame.mixer.Sound("buzzer.wav"))
+
 
 class Continue(Step):
     def __init__(self, i):
@@ -164,8 +184,10 @@ class HighLow(Step):
                     self.done = True
                 if guess < self.number:
                     self.text.set_text("Higher")
+                    super().buzzer()
                 if guess > self.number:
                     self.text.set_text("Lower")
+                    super().buzzer()
 
 
         self.manager.update(delta)
@@ -329,6 +351,11 @@ class Pi(Step):
 class DVD(Step):
     def __init__(self):
         super().__init__()
+        self.text = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((100, 225), (400, 50)),
+            text='Catch the DVD Logo',
+            manager=self.manager,
+        )
         self.done = False
 
     def run(self, window_surface, delta):
@@ -433,7 +460,6 @@ class Colourblind(Step):
         self.manager.draw_ui(window_surface)
         return self.done
     
-
 class Captcha(Step):
     def __init__(self):
         super().__init__()
@@ -517,7 +543,6 @@ class Password(Step):
 
         self.manager.draw_ui(window_surface)
         return self.done
-
 
 class Calculus(Step):
     def __init__(self):
