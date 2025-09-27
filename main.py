@@ -2,7 +2,6 @@ import pygame
 import pygame_gui
 import sys
 import random
-import random
 
 pygame.init()
 
