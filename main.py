@@ -20,7 +20,7 @@ channel += 1
 
 def poppups():
     while True:
-        time.sleep(random.randint(5, 10))
+        time.sleep(random.randint(20, 30))
         match random.randint(0, 1):
             case 0:
                 pringles()
