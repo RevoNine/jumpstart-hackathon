@@ -255,16 +255,62 @@ class Pi(Step):
         self.manager.draw_ui(window_surface)
         return self.done
 
+class FinishSignUp(Step):
+    def __init__(self):
+        super().__init__()
+        self.done_button =  pygame_gui.elements.UIButton(text="Finish sign-up!", relative_rect=pygame.Rect((350, 300), (100, 50)), manager = self.manager)
+        self.timer_time = 6
+        self.timer = -1
+        self.done = False
+    
+    def run(self, window_surface, delta):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+                
+            self.manager.process_events(event)
+
+            if event.type == pygame_gui.UI_BUTTON_ON_HOVERED:
+                self.timer = self.timer_time
+
+            if event.type == pygame_gui.UI_BUTTON_PRESSED:
+                # UI Events
+                if event.ui_element == self.done_button:
+                    self.done = True
+
+        if self.timer > 0:
+            self.timer -= 1
+        elif self.timer ==0:
+            randomx = random.randint(0, 700)
+            randomy = random.randint(0, 550)
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+
+            while mouse_x in range(randomx, randomx + 100):
+                randomx = random.randint(0, 700)
+            while mouse_y in range(randomy, randomy + 50):
+                randomy = random.randint(0, 550)
+
+            self.done_button.set_relative_position((randomx, randomy))
+            self.timer = -1
+
+
+        self.manager.update(delta)
+
+        self.manager.draw_ui(window_surface)
+        return self.done
+
 
 clock = pygame.time.Clock()
 
 step = 0
 steps = [
-    HighLow(),
-    Username(),
-    Birthday(),
-    MaidenName()
-    Pi()
+    #HighLow(),
+    #Username(),
+    #Birthday(),
+    #MaidenName(),
+    #Pi(),
+    FinishSignUp()
 ]
 
 manager = pygame_gui.UIManager((800, 600))
