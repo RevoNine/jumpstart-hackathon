@@ -470,11 +470,52 @@ class Calculus(Step):
 
         self.manager.draw_ui(window_surface)
         return self.done
+    
+class Intro(Step):
+    def __init__(self):
+        super().__init__()
+        self.done = False
+
+        self.text = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((0, -150), (300, 50)),
+            text="Thank for for installing Bookeysoft!",
+            manager=self.manager,
+            anchors={'centerx': 'centerx', 'centery' : 'centery'}
+        )
+        self.text2 = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((0, -100), (300, 50)),
+            text="Please press enter to sign up!",
+            manager=self.manager,
+            anchors={'centerx': 'centerx', 'centery' : 'centery'}
+        )
+        self.logo_image = pygame.image.load('logo.png')   
+        self.logo_image = pygame.transform.scale_by(self.logo_image, 2)
+        
+        
+    
+    def run(self, window_surface, delta):
+        window_surface.blit(self.logo_image, (270,270))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            self.manager.process_events(event)
+
+            if event.type==pygame.KEYDOWN:
+                if event.key==pygame.K_RETURN:
+                    self.done = True
+
+        self.manager.update(delta)
+
+        self.manager.draw_ui(window_surface)
+        return self.done
 
 clock = pygame.time.Clock()
 
 step = 0
 steps = [
+    Intro(),
     Username(),
     Password(),
     Captcha(),
