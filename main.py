@@ -90,11 +90,53 @@ class HighLow(Step):
         return self.done
 
 
+class Username(Step):
+    def __init__(self):
+        super().__init__()
+        self.done = False
+        self.text = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((275, 225), (250, 50)),
+            text="Enter your Username",
+            manager=self.manager,
+        )
+        self.input = pygame_gui.elements.UITextEntryLine(
+            relative_rect=pygame.Rect((350, 275), (100, 50)),
+            manager=self.manager,
+        )
+        self.usernames = []
+
+    def run(self, window_surface, delta):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+                
+            self.manager.process_events(event)
+
+            if event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED:
+                username = self.input.get_text()
+                if self.usernames.__contains__(username):
+                    self.text.set_text("Username Has already been used")
+                elif len(self.usernames) < 5:
+                    self.text.set_text("Username Has already been used")
+                    self.usernames.append(username)
+                else:
+                    self.done = True
+
+
+        self.manager.update(delta)
+
+        self.manager.draw_ui(window_surface)
+        return self.done
+
+
+
 clock = pygame.time.Clock()
 
 step = 0
 steps = [
-    HighLow(),
+    # HighLow(),
+    Username(),
 ]
 
 manager = pygame_gui.UIManager((800, 600))
