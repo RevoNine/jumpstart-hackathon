@@ -2,6 +2,7 @@ import pygame
 import pygame_gui
 import sys
 import random
+import random
 
 pygame.init()
 
@@ -49,7 +50,7 @@ class Continue(Step):
 
         self.manager.draw_ui(window_surface)
         return self.done
-    
+
 
 class Birthday(Step):
     def __init__(self):
@@ -99,7 +100,6 @@ clock = pygame.time.Clock()
 step = 0
 steps = [
     Continue(0),
-    Birthday(),
     Continue(1),
     Continue(2),
     Continue(3),
