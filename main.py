@@ -2,8 +2,14 @@ import pygame
 import pygame_gui
 import sys
 import random
+import time
+from pygame import mixer
 
 pygame.init()
+mixer.init()
+mixer.Channel(0).play(pygame.mixer.Sound("Wii Theme.mp3"),loops=-1)
+time.sleep(0.15)
+mixer.Channel(1).play(pygame.mixer.Sound("Wii Theme.mp3"),loops=-1)
 
 pygame.display.set_caption('Quick Start')
 window_surface = pygame.display.set_mode((800, 600))
