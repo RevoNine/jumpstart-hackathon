@@ -4,6 +4,7 @@ import sys
 import random
 import time
 from pygame import mixer
+import os
 
 pygame.init()
 mixer.init()
@@ -258,7 +259,7 @@ class Pi(Step):
 class FinishSignUp(Step):
     def __init__(self):
         super().__init__()
-        self.done_button =  pygame_gui.elements.UIButton(text="Finish sign-up!", relative_rect=pygame.Rect((350, 300), (100, 50)), manager = self.manager)
+        self.done_button =  pygame_gui.elements.UIButton(text="Finish sign-up!", relative_rect=pygame.Rect((350, 300), (120, 50)), manager = self.manager)
         self.timer_time = 6
         self.timer = -1
         self.done = False
@@ -286,7 +287,7 @@ class FinishSignUp(Step):
             randomy = random.randint(0, 550)
             mouse_x, mouse_y = pygame.mouse.get_pos()
 
-            while mouse_x in range(randomx, randomx + 100):
+            while mouse_x in range(randomx, randomx + 120):
                 randomx = random.randint(0, 700)
             while mouse_y in range(randomy, randomy + 50):
                 randomy = random.randint(0, 550)
@@ -300,16 +301,189 @@ class FinishSignUp(Step):
         self.manager.draw_ui(window_surface)
         return self.done
 
+class Colourblind(Step):
+    def __init__(self):
+        super().__init__()
+        self.done = False
+
+        self.text = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((0, -150), (300, 50)),
+            text="Prove you're not colourblind.",
+            manager=self.manager,
+            anchors={'centerx': 'centerx', 'centery' : 'centery'}
+        )
+        self.input = pygame_gui.elements.UITextEntryLine(
+            relative_rect=pygame.Rect((0, -100), (200, 50)),
+            manager=self.manager,
+            anchors={'centerx': 'centerx', 'centery' : 'centery'}
+        )
+
+        self.colourblind_image = pygame.image.load('colourblind.png')
+        #self.colourblind_image = pygame.transform.scale_by(self.colourblind_image, 0.25)
+        
+    
+    def run(self, window_surface, delta):
+        window_surface.blit(self.colourblind_image, (250,250))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            self.manager.process_events(event)
+
+            if event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED:
+                answer = self.input.get_text()
+                if answer != "74":
+                    pass#self.text.text_colour=pygame.Color("#FF0000")
+                else:
+                    self.done = True
+
+        self.manager.update(delta)
+
+        self.manager.draw_ui(window_surface)
+        return self.done
+    
+
+class Captcha(Step):
+    def __init__(self):
+        super().__init__()
+        self.done = False
+
+        self.text = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((0, -150), (300, 50)),
+            text="Prove you're not a robot.",
+            manager=self.manager,
+            anchors={'centerx': 'centerx', 'centery' : 'centery'}
+        )
+        self.input = pygame_gui.elements.UITextEntryLine(
+            relative_rect=pygame.Rect((0, -100), (200, 50)),
+            manager=self.manager,
+            anchors={'centerx': 'centerx', 'centery' : 'centery'}
+        )
+
+        self.captcha_image = pygame.image.load('captcha.png')
+        
+        
+    
+    def run(self, window_surface, delta):
+        window_surface.blit(self.captcha_image, (110,260))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            self.manager.process_events(event)
+
+            if event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED:
+                answer = self.input.get_text()
+                if answer != "Td4eva":
+                    pass#self.text.text_colour=pygame.Color("#FF0000")
+                else:
+                    self.done = True
+
+        self.manager.update(delta)
+
+        self.manager.draw_ui(window_surface)
+        return self.done
+    
+class Password(Step):
+    def __init__(self):
+        super().__init__()
+        self.done = False
+        self.text = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((0, -50), (500, 50)),
+            text="Enter your Password",
+            manager=self.manager,
+            anchors={'centerx': 'centerx', 'centery' : 'centery'}
+        )
+        self.input = pygame_gui.elements.UITextEntryLine(
+            relative_rect=pygame.Rect((0, 0), (200, 50)),
+            manager=self.manager,
+            anchors={'centerx': 'centerx', 'centery' : 'centery'}
+        )
+        self.password = ''
+
+    def run(self, window_surface, delta):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+                
+            self.manager.process_events(event)
+
+            if event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED:
+                password = self.input.get_text()
+                if not any(char.isdigit() for char in password):
+                    self.text.set_text("Password must contain a number.")
+                elif all(char.isalnum() for char in password):
+                    self.text.set_text("Password must contain a special character.")
+                elif '?' not in password:
+                    self.text.set_text("Password must contain a specific special character.")
+                else:
+                    self.done = True
+
+
+        self.manager.update(delta)
+
+        self.manager.draw_ui(window_surface)
+        return self.done
+
+
+class Calculus(Step):
+    def __init__(self):
+        super().__init__()
+        self.done = False
+
+        self.text = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((0, -150), (300, 50)),
+            text="Prove yourself worthy.",
+            manager=self.manager,
+            anchors={'centerx': 'centerx', 'centery' : 'centery'}
+        )
+        self.input = pygame_gui.elements.UITextEntryLine(
+            relative_rect=pygame.Rect((0, -100), (200, 50)),
+            manager=self.manager,
+            anchors={'centerx': 'centerx', 'centery' : 'centery'}
+        )
+
+        self.calculus_image = pygame.image.load('calculus.png')
+        
+        
+    
+    def run(self, window_surface, delta):
+        window_surface.blit(self.calculus_image, (210,270))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            self.manager.process_events(event)
+
+            if event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED:
+                answer = self.input.get_text()
+                if answer != "3":
+                    pass#self.text.text_colour=pygame.Color("#FF0000")
+                else:
+                    self.done = True
+
+        self.manager.update(delta)
+
+        self.manager.draw_ui(window_surface)
+        return self.done
 
 clock = pygame.time.Clock()
 
 step = 0
 steps = [
-    #HighLow(),
-    #Username(),
-    #Birthday(),
-    #MaidenName(),
-    #Pi(),
+    Username(),
+    Password(),
+    Captcha(),
+    Colourblind(),
+    Calculus(),
+    HighLow(),
+    Birthday(),
+    MaidenName(),
+    Pi(),    
     FinishSignUp()
 ]
 
