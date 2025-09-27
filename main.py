@@ -5,6 +5,7 @@ import random
 import time
 import concurrent.futures
 from tkinter import messagebox
+import tkinter
 from pygame import mixer
 
 channel = 0
@@ -44,6 +45,46 @@ def error():
 pool = concurrent.futures.ThreadPoolExecutor(max_workers=2)
 pool.submit(poppups)
 
+image = None
+
+x_vel = 1
+y_vel = 1
+
+def dvd():
+    root = tkinter.Tk()
+    root.overrideredirect(True)
+    root.attributes('-transparentcolor', "white")
+    root.wm_attributes("-topmost", True)
+    global image
+    image = tkinter.PhotoImage(file=r"image.png", width=1100, height=650)
+    image = image.subsample(3)
+    b = tkinter.Button(root, image=image, borderwidth=0, bg="white", command=root.destroy).pack()
+
+    def update():
+        right = 1100 / 3
+        bottom = 650 / 3
+        width = root.winfo_screenwidth()
+        height = root.winfo_screenheight()
+        x = root.winfo_x()
+        y = root.winfo_y()
+
+        global x_vel
+        global y_vel
+
+        if x <= 0:
+            x_vel = 1
+        if y <= 0:
+            y_vel = 1
+        if x + right >= width:
+            x_vel = -1
+        if y + bottom >= height:
+            y_vel = -1
+
+        root.geometry(f"+{x + x_vel}+{y + y_vel}")
+        root.after(1, update)
+    root.after(1, update)
+    root.mainloop()
+
 pygame.display.set_caption('Quick Start')
 window_surface = pygame.display.set_mode((800, 600))
 
@@ -52,8 +93,9 @@ background.fill(pygame.Color('#000000'))
 
 def close():
     pygame.quit()
+    global pool
+    pool.shutdown(wait=False)
     sys.exit()
-    pool.shutdown()
 
 class Step:
     def __init__(self):
@@ -284,6 +326,26 @@ class Pi(Step):
         self.manager.draw_ui(window_surface)
         return self.done
 
+class DVD(Step):
+    def __init__(self):
+        super().__init__()
+        self.done = False
+
+    def run(self, window_surface, delta):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                close()
+                
+            self.manager.process_events(event)
+
+        self.manager.update(delta)
+
+        self.manager.draw_ui(window_surface)
+
+        dvd()
+
+        return True
+
 
 clock = pygame.time.Clock()
 
@@ -293,7 +355,8 @@ steps = [
     Username(),
     Birthday(),
     MaidenName(),
-    Pi()
+    Pi(),
+    DVD(),
 ]
 
 manager = pygame_gui.UIManager((800, 600))
