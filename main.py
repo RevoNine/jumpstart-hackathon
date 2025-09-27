@@ -61,7 +61,7 @@ class HighLow(Step):
         super().__init__()
         self.done = False
         self.text = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((350, 225), (100, 50)),
+            relative_rect=pygame.Rect((300, 225), (200, 50)),
             text='Enter your favourite number',
             manager=self.manager,
         )
