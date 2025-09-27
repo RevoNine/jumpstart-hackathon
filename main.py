@@ -3,6 +3,8 @@ import pygame_gui
 import sys
 import random
 import time
+import concurrent.futures
+from tkinter import messagebox
 from pygame import mixer
 
 channel = 0
@@ -15,6 +17,32 @@ time.sleep(0.15)
 mixer.Channel(channel).play(pygame.mixer.Sound("Wii Theme.mp3"),loops=-1)
 channel += 1
 
+def poppups():
+    while True:
+        time.sleep(random.randint(5, 10))
+        match random.randint(0, 1):
+            case 0:
+                pringles()
+            case 1:
+                error()
+
+
+def pringles():
+    messagebox.showinfo("Important!!!!", "Hot pringles in your area!!")
+
+def error():
+    messagebox.showerror("Error", "Missing admin permissions cannot delete system32\nplease run this program as administrator")
+    time.sleep(0.1)
+    messagebox.showerror("Error", "Missing admin permissions cannot delete system32\nplease run this program as administrator")
+    time.sleep(0.1)
+    messagebox.showerror("Error", "Missing admin permissions cannot delete system32\nplease run this program as administrator")
+    time.sleep(0.1)
+    messagebox.showerror("Error", "Missing admin permissions cannot delete system32\nplease run this program as administrator")
+    time.sleep(0.1)
+    messagebox.showerror("Error", "Missing admin permissions cannot delete system32\nplease run this program as administrator")
+
+pool = concurrent.futures.ThreadPoolExecutor(max_workers=2)
+pool.submit(poppups)
 
 pygame.display.set_caption('Quick Start')
 window_surface = pygame.display.set_mode((800, 600))
@@ -22,6 +50,10 @@ window_surface = pygame.display.set_mode((800, 600))
 background = pygame.Surface((800, 600))
 background.fill(pygame.Color('#000000'))
 
+def close():
+    pygame.quit()
+    sys.exit()
+    pool.shutdown()
 
 class Step:
     def __init__(self):
@@ -45,8 +77,7 @@ class Continue(Step):
     def run(self, window_surface, delta):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                close()
                 
             self.manager.process_events(event)
 
@@ -81,8 +112,7 @@ class HighLow(Step):
     def run(self, window_surface, delta):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                close()
                 
             self.manager.process_events(event)
 
@@ -101,7 +131,6 @@ class HighLow(Step):
         self.manager.draw_ui(window_surface)
         return self.done
 
-    
 class Birthday(Step):
     def __init__(self):
         super().__init__()
@@ -129,8 +158,7 @@ class Birthday(Step):
     def run(self, window_surface, delta):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                close()
                 
             self.manager.process_events(event)
 
@@ -164,8 +192,7 @@ class Username(Step):
     def run(self, window_surface, delta):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                close()
                 
             self.manager.process_events(event)
 
@@ -184,7 +211,6 @@ class Username(Step):
 
         self.manager.draw_ui(window_surface)
         return self.done
-
 
 class MaidenName(Step):
     def __init__(self):
@@ -206,8 +232,7 @@ class MaidenName(Step):
     def run(self, window_surface, delta):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                close()
                 
             self.manager.process_events(event)
 
@@ -238,8 +263,7 @@ class Pi(Step):
     def run(self, window_surface, delta):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                close()
                 
             self.manager.process_events(event)
 
@@ -300,8 +324,7 @@ while True:
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                close()
             
             manager.process_events(event)
 
