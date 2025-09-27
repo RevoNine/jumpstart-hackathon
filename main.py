@@ -263,10 +263,12 @@ class Username(Step):
             if event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED:
                 username = self.input.get_text()
                 if self.usernames.__contains__(username):
-                    self.text.set_text("Username Has already been used")
+                    self.text.set_text(f"Username {username} Has already been used")
+                    super().buzzer()
                 elif len(self.usernames) < 5:
-                    self.text.set_text("Username Has already been used")
+                    self.text.set_text(f"Username {username} Has already been used")
                     self.usernames.append(username)
+                    super().buzzer()
                 else:
                     self.done = True
 
@@ -342,6 +344,7 @@ class Pi(Step):
                             self.text.set_text("Your doing grate keap going")
                         else:
                             self.text.set_text("at least one of these digits {} is wrong".format(self.input.get_text()[-10:]))
+                            super().buzzer()
 
         self.manager.update(delta)
 
@@ -493,7 +496,7 @@ class Captcha(Step):
             if event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED:
                 answer = self.input.get_text()
                 if answer != "Td4eva":
-                    pass#self.text.text_colour=pygame.Color("#FF0000")
+                    super().buzzer()
                 else:
                     self.done = True
 
@@ -531,10 +534,13 @@ class Password(Step):
                 password = self.input.get_text()
                 if not any(char.isdigit() for char in password):
                     self.text.set_text("Password must contain a number.")
+                    super().buzzer()
                 elif all(char.isalnum() for char in password):
                     self.text.set_text("Password must contain a special character.")
+                    super().buzzer()
                 elif '?' not in password:
                     self.text.set_text("Password must contain a specific special character.")
+                    super().buzzer()
                 else:
                     self.done = True
 
@@ -577,7 +583,7 @@ class Calculus(Step):
             if event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED:
                 answer = self.input.get_text()
                 if answer != "3":
-                    pass#self.text.text_colour=pygame.Color("#FF0000")
+                    super().buzzer()
                 else:
                     self.done = True
 
