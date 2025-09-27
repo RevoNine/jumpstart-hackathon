@@ -1,6 +1,7 @@
 import pygame
 import pygame_gui
 import sys
+import random
 
 pygame.init()
 
@@ -50,14 +51,50 @@ class Continue(Step):
         return self.done
 
 
+class HighLow(Step):
+    def __init__(self):
+        super().__init__()
+        self.done = False
+        self.text = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((350, 225), (100, 50)),
+            text='Enter your favourite number',
+            manager=self.manager,
+        )
+        self.input = pygame_gui.elements.UITextEntryLine(
+            relative_rect=pygame.Rect((350, 275), (100, 50)),
+            manager=self.manager,
+        )
+        self.number = random.randint(0, 100)
+
+    def run(self, window_surface, delta):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+                
+            self.manager.process_events(event)
+
+            if event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED:
+                guess = int(self.input.get_text())
+                if guess == self.number:
+                    self.done = True
+                if guess < self.number:
+                    self.text.set_text("Higher")
+                if guess > self.number:
+                    self.text.set_text("Lower")
+
+
+        self.manager.update(delta)
+
+        self.manager.draw_ui(window_surface)
+        return self.done
+
+
 clock = pygame.time.Clock()
 
 step = 0
 steps = [
-    Continue(0),
-    Continue(1),
-    Continue(2),
-    Continue(3),
+    HighLow(),
 ]
 
 manager = pygame_gui.UIManager((800, 600))
