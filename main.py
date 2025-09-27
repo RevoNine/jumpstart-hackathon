@@ -220,7 +220,7 @@ class Pi(Step):
         super().__init__()
         self.done = False
         self.text = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((300, 225), (200, 50)),
+            relative_rect=pygame.Rect((100, 225), (400, 50)),
             text='Enter Pi to 100 digits',
             manager=self.manager,
         )
@@ -246,9 +246,9 @@ class Pi(Step):
                         self.done = True
                     elif (length - 2) % 10 == 0:
                         if self.input.get_text() == self.pi[:length]:
-                            print("yes")
+                            self.text.set_text("Your doing grate keap going")
                         else:
-                            print("no")
+                            self.text.set_text("at least one of these digits {} is wrong".format(self.input.get_text()[-10:]))
 
         self.manager.update(delta)
 
@@ -263,7 +263,7 @@ steps = [
     HighLow(),
     Username(),
     Birthday(),
-    MaidenName()
+    MaidenName(),
     Pi()
 ]
 
