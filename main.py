@@ -31,7 +31,7 @@ class Continue(Step):
         super().__init__()
         self.done = False
         self.continue_btn = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect((350, 275), (100, 50)),
+            relative_rect=pygame.Rect((0, 0), (200, 50)),
             text='Continue',
             manager=self.manager,
         );
@@ -61,13 +61,15 @@ class HighLow(Step):
         super().__init__()
         self.done = False
         self.text = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((300, 225), (200, 50)),
+            relative_rect=pygame.Rect((0, -50), (300, 50)),
             text='Enter your favourite number',
             manager=self.manager,
+            anchors={'centerx': 'centerx', 'centery' : 'centery'}
         )
         self.input = pygame_gui.elements.UITextEntryLine(
-            relative_rect=pygame.Rect((350, 275), (100, 50)),
+            relative_rect=pygame.Rect((0, 0), (100, 50)),
             manager=self.manager,
+            anchors={'centerx': 'centerx', 'centery' : 'centery'}
         )
         self.number = random.randint(0, 100)
 
@@ -80,7 +82,7 @@ class HighLow(Step):
             self.manager.process_events(event)
 
             if event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED:
-                guess = int(self.input.get_text())
+                guess = int(self.input.get_text())      # make it not crash later
                 if guess == self.number:
                     self.done = True
                 if guess < self.number:
@@ -94,19 +96,63 @@ class HighLow(Step):
         self.manager.draw_ui(window_surface)
         return self.done
 
+    
+class Birthday(Step):
+    def __init__(self):
+        super().__init__()
+        
+        self.birthday_days = ["Eight", "Eighteen", "Eleven", "Fifteen", "Five", "Four", "Fourteen", "Nine", "Nineteen", "One", "Seven", "Seventeen", "Six", "Sixteen", "Ten", "Thirteen", "Thirty", "Thirty-one", "Three", "Twelve", "Twenty", "Twenty-eight", "Twenty-five", "Twenty-four", "Twenty-nine", "Twenty-one", "Twenty-seven", "Twenty-six", "Twenty-three", "Twenty-two", "Two"]
+        self.birthday_months = ["April", "August", "December", "February", "January", "July", "June", "March", "May", "November", "October", "September"]
+        self.birthday_years = ["Nineteen eighty", "Nineteen eighty-eight", "Nineteen eighty-five", "Nineteen eighty-four", "Nineteen eighty-nine", "Nineteen eighty-one", "Nineteen eighty-seven", "Nineteen eighty-six", "Nineteen eighty-three", "Nineteen eighty-two", "Nineteen ninety", "Nineteen ninety-eight", "Nineteen ninety-five", "Nineteen ninety-four", "Nineteen ninety-nine", "Nineteen ninety-one", "Nineteen ninety-seven", "Nineteen ninety-six", "Nineteen ninety-three", "Nineteen ninety-two", "Nineteen seventy", "Nineteen seventy-eight", "Nineteen seventy-five", "Nineteen seventy-four", "Nineteen seventy-nine", "Nineteen seventy-one", "Nineteen seventy-seven", "Nineteen seventy-six", "Nineteen seventy-three", "Nineteen seventy-two", "Two thousand", "Two thousand eight", "Two thousand eighteen", "Two thousand eleven", "Two thousand fifteen", "Two thousand five", "Two thousand fourteen", "Two thousand four", "Two thousand nineteen", "Two thousand one", "Two thousand seven", "Two thousand seventeen", "Two thousand six", "Two thousand sixteen", "Two thousand ten", "Two thousand thirteen", "Two thousand three", "Two thousand twelve", "Two thousand twenty", "Two thousand twenty-five", "Two thousand twenty-four", "Two thousand twenty-one", "Two thousand twenty-three", "Two thousand twenty-two", "Two thousand two"]
+        random.shuffle(self.birthday_days)
+        random.shuffle(self.birthday_months)
+        random.shuffle(self.birthday_years)
+
+        self.birthday_days_text = pygame_gui.elements.UILabel(text="Enter your date of birth.", relative_rect=pygame.Rect((0, -240), (250, 50)), manager = self.manager, anchors={'centerx': 'centerx', 'centery' : 'centery'})
+        self.birthday_days_text = pygame_gui.elements.UILabel(text="Day", relative_rect=pygame.Rect((0, -177), (250, 50)), manager = self.manager, anchors={'centerx': 'centerx', 'centery' : 'centery'})
+        self.birthday_months_text = pygame_gui.elements.UILabel(text="Month", relative_rect=pygame.Rect((0, -97), (250, 50)), manager = self.manager, anchors={'centerx': 'centerx', 'centery' : 'centery'})
+        self.birthday_years_text = pygame_gui.elements.UILabel(text="Year", relative_rect=pygame.Rect((0, -17), (250, 50)), manager = self.manager, anchors={'centerx': 'centerx', 'centery' : 'centery'})
+
+        self.birthday_days_entry = pygame_gui.elements.UIDropDownMenu(options_list=self.birthday_days, relative_rect=pygame.Rect((0, -140), (250, 50)), manager = self.manager, starting_option="Eight", anchors={'centerx': 'centerx', 'centery' : 'centery'}, expansion_height_limit=200)
+        self.birthday_months_entry = pygame_gui.elements.UIDropDownMenu(options_list=self.birthday_months, relative_rect=pygame.Rect((0, -60), (250, 50)), manager = self.manager, starting_option="April", anchors={'centerx': 'centerx', 'centery' : 'centery'}, expansion_height_limit=200)
+        self.birthday_years_entry = pygame_gui.elements.UIDropDownMenu(options_list=self.birthday_years, relative_rect=pygame.Rect((0, 20), (250, 50)), manager = self.manager, starting_option="Nineteen eighty", anchors={'centerx': 'centerx', 'centery' : 'centery'}, expansion_height_limit=200)
+        
+        self.done_button =  pygame_gui.elements.UIButton(text="Continue", relative_rect=pygame.Rect((0, 150), (100, 50)), manager = self.manager, anchors={'centerx': 'centerx', 'centery' : 'centery'})
+
+        self.done = False
+
+    def run(self, window_surface, delta):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+                
+            self.manager.process_events(event)
+
+            if event.type == pygame_gui.UI_BUTTON_PRESSED:
+                # UI Events
+                if event.ui_element == self.done_button:
+                    self.done = True
+
+        self.manager.update(delta)
+
+        self.manager.draw_ui(window_surface)
+        return self.done
 
 class Username(Step):
     def __init__(self):
         super().__init__()
         self.done = False
         self.text = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((275, 225), (250, 50)),
+            relative_rect=pygame.Rect((0, -50), (300, 50)),
             text="Enter your Username",
             manager=self.manager,
+            anchors={'centerx': 'centerx', 'centery' : 'centery'}
         )
         self.input = pygame_gui.elements.UITextEntryLine(
-            relative_rect=pygame.Rect((350, 275), (100, 50)),
+            relative_rect=pygame.Rect((0, 0), (200, 50)),
             manager=self.manager,
+            anchors={'centerx': 'centerx', 'centery' : 'centery'}
         )
         self.usernames = []
 
@@ -134,28 +180,40 @@ class Username(Step):
         self.manager.draw_ui(window_surface)
         return self.done
 
-class Birthday(Step):
+
+class MaidenName(Step):
     def __init__(self):
         super().__init__()
-        self.birthday_days = ["Eight", "Eighteen", "Eleven", "Fifteen", "Five", "Four", "Fourteen", "Nine", "Nineteen", "One", "Seven", "Seventeen", "Six", "Sixteen", "Ten", "Thirteen", "Thirty", "Thirty-one", "Three", "Twelve", "Twenty", "Twenty-eight", "Twenty-five", "Twenty-four", "Twenty-nine", "Twenty-one", "Twenty-seven", "Twenty-six", "Twenty-three", "Twenty-two", "Two"]
-        self.birthday_months = ["April", "August", "December", "February", "January", "July", "June", "March", "May", "November", "October", "September"]
-        self.birthday_years = ["Nineteen eighty", "Nineteen eighty-eight", "Nineteen eighty-five", "Nineteen eighty-four", "Nineteen eighty-nine", "Nineteen eighty-one", "Nineteen eighty-seven", "Nineteen eighty-six", "Nineteen eighty-three", "Nineteen eighty-two", "Nineteen ninety", "Nineteen ninety-eight", "Nineteen ninety-five", "Nineteen ninety-four", "Nineteen ninety-nine", "Nineteen ninety-one", "Nineteen ninety-seven", "Nineteen ninety-six", "Nineteen ninety-three", "Nineteen ninety-two", "Nineteen seventy", "Nineteen seventy-eight", "Nineteen seventy-five", "Nineteen seventy-four", "Nineteen seventy-nine", "Nineteen seventy-one", "Nineteen seventy-seven", "Nineteen seventy-six", "Nineteen seventy-three", "Nineteen seventy-two", "Two thousand", "Two thousand eight", "Two thousand eighteen", "Two thousand eleven", "Two thousand fifteen", "Two thousand five", "Two thousand fourteen", "Two thousand four", "Two thousand nineteen", "Two thousand one", "Two thousand seven", "Two thousand seventeen", "Two thousand six", "Two thousand sixteen", "Two thousand ten", "Two thousand thirteen", "Two thousand three", "Two thousand twelve", "Two thousand twenty", "Two thousand twenty-five", "Two thousand twenty-four", "Two thousand twenty-one", "Two thousand twenty-three", "Two thousand twenty-two", "Two thousand two"]
-        random.shuffle(self.birthday_days)
-        random.shuffle(self.birthday_months)
-        random.shuffle(self.birthday_years)
-
-        self.birthday_days_text = pygame_gui.elements.UILabel(text="Enter your date of birth.", relative_rect=pygame.Rect((0, -240), (250, 50)), manager = self.manager, anchors={'centerx': 'centerx', 'centery' : 'centery'})
-        self.birthday_days_text = pygame_gui.elements.UILabel(text="Day", relative_rect=pygame.Rect((0, -180), (250, 50)), manager = self.manager, anchors={'centerx': 'centerx', 'centery' : 'centery'})
-        self.birthday_months_text = pygame_gui.elements.UILabel(text="Month", relative_rect=pygame.Rect((0, -100), (250, 50)), manager = self.manager, anchors={'centerx': 'centerx', 'centery' : 'centery'})
-        self.birthday_years_text = pygame_gui.elements.UILabel(text="Year", relative_rect=pygame.Rect((0, -20), (250, 50)), manager = self.manager, anchors={'centerx': 'centerx', 'centery' : 'centery'})
-
-        self.birthday_days_entry = pygame_gui.elements.UIDropDownMenu(options_list=self.birthday_days, relative_rect=pygame.Rect((0, -140), (250, 50)), manager = self.manager, starting_option="Eight", anchors={'centerx': 'centerx', 'centery' : 'centery'}, expansion_height_limit=200)
-        self.birthday_months_entry = pygame_gui.elements.UIDropDownMenu(options_list=self.birthday_months, relative_rect=pygame.Rect((0, -60), (250, 50)), manager = self.manager, starting_option="April", anchors={'centerx': 'centerx', 'centery' : 'centery'}, expansion_height_limit=200)
-        self.birthday_years_entry = pygame_gui.elements.UIDropDownMenu(options_list=self.birthday_years, relative_rect=pygame.Rect((0, 20), (250, 50)), manager = self.manager, starting_option="Nineteen eighty", anchors={'centerx': 'centerx', 'centery' : 'centery'}, expansion_height_limit=200)
-        
-        self.done_button =  pygame_gui.elements.UIButton(text="Continue", relative_rect=pygame.Rect((0, 150), (100, 50)), manager = self.manager, anchors={'centerx': 'centerx', 'centery' : 'centery'})
-
         self.done = False
+        self.text = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((0, -50), (300, 50)),
+            text="Enter your second pet's maiden name.",
+            manager=self.manager,
+            anchors={'centerx': 'centerx', 'centery' : 'centery'}
+        )
+        self.input = pygame_gui.elements.UITextEntryLine(
+            relative_rect=pygame.Rect((0, 0), (200, 50)),
+            manager=self.manager,
+            anchors={'centerx': 'centerx', 'centery' : 'centery'}
+        )
+        self.usernames = []
+
+    def run(self, window_surface, delta):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+                
+            self.manager.process_events(event)
+
+            if event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED:
+                self.done = True
+
+
+        self.manager.update(delta)
+
+        self.manager.draw_ui(window_surface)
+        return self.done
 
 class Pi(Step):
     def __init__(self):
@@ -205,6 +263,7 @@ steps = [
     HighLow(),
     Username(),
     Birthday(),
+    MaidenName()
     Pi()
 ]
 
