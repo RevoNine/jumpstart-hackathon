@@ -152,6 +152,27 @@ class Birthday(Step):
 
         self.done = False
 
+    def run(self, window_surface, delta):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+                
+            self.manager.process_events(event)
+
+            #if event.type == pygame_gui.UI_BUTTON_PRESSED:
+                # UI Events
+                #if event.ui_element == self.continue_btn:
+                #    self.done = True
+                #    print('Continuing ' + str(self.i))
+
+        self.manager.update(delta)
+
+        self.manager.draw_ui(window_surface)
+        return self.done
+
+
+
 
 class Birthday(Step):
     def __init__(self):
@@ -181,8 +202,8 @@ clock = pygame.time.Clock()
 
 step = 0
 steps = [
-    HighLow(),
-    Username(),
+    #HighLow(),
+    #Username(),
     Birthday()
 ]
 
