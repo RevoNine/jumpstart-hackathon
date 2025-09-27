@@ -152,6 +152,46 @@ class Birthday(Step):
 
         self.done = False
 
+class Pi(Step):
+    def __init__(self):
+        super().__init__()
+        self.done = False
+        self.text = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((300, 225), (200, 50)),
+            text='Enter Pi to 100 digits',
+            manager=self.manager,
+        )
+        self.input = pygame_gui.elements.UITextEntryLine(
+            relative_rect=pygame.Rect((350, 275), (100, 50)),
+            manager=self.manager,
+        )
+        self.pi = "3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679"
+
+    def run(self, window_surface, delta):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+                
+            self.manager.process_events(event)
+
+            if event.type == pygame_gui.UI_TEXT_ENTRY_CHANGED:
+                # UI Events
+                if event.ui_element == self.input:
+                    length = len(self.input.get_text())
+                    if length == 102 and self.input.get_text() == self.pi:
+                        self.done = True
+                    elif (length - 2) % 10 == 0:
+                        if self.input.get_text() == self.pi[:length]:
+                            print("yes")
+                        else:
+                            print("no")
+
+        self.manager.update(delta)
+
+        self.manager.draw_ui(window_surface)
+        return self.done
+
 
 clock = pygame.time.Clock()
 
@@ -159,7 +199,8 @@ step = 0
 steps = [
     HighLow(),
     Username(),
-    Birthday()
+    Birthday(),
+    Pi()
 ]
 
 manager = pygame_gui.UIManager((800, 600))
